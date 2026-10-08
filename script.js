@@ -1,30 +1,34 @@
-const hourHand = document.querySelector('.hour-hand');
-const minuteHand = document.querySelector('.minute-hand');
-const secondHand = document.querySelector('.second-hand');
-const digitalTime = document.querySelector('#digital-time');
-const dateElement = document.querySelector('#date');
+const ins=document.getElementById('input-box');
+//const btn=document.getElementsByTagName("button");
+const container=document.getElementById("list-container");
 
-const pad = (value) => String(value).padStart(2, '0');
-
-function updateClock() {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-    const milliseconds = now.getMilliseconds();
-
-    const secondDegrees = (seconds + milliseconds / 1000) * 6;
-    const minuteDegrees = (minutes + seconds / 60) * 6;
-    const hourDegrees = ((hours % 12) + minutes / 60 + seconds / 3600) * 30;
-
-    hourHand.style.transform = `rotate(${hourDegrees}deg)`;
-    minuteHand.style.transform = `rotate(${minuteDegrees}deg)`;
-    secondHand.style.transform = `rotate(${secondDegrees}deg)`;
-    digitalTime.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-    dateElement.textContent = now.toLocaleDateString(undefined, {
-        weekday: 'long', month: 'long', day: 'numeric'
-    });
+function add(){
+    if(ins.value===' '){
+        alert("You must write something");
+    }else{
+        let li=document.createElement('li');
+        li.innerHTML=ins.value;
+        container.appendChild(li);
+        let span=document.createElement("span");
+        span.innerHTML="\u00d7";
+        li.appendChild(span);
+    }
+   ins.value= " ";
+   save();
 }
 
-updateClock();
-setInterval(updateClock, 50);
+container.addEventListener("click",function(r){
+    if(r.target.tagName === "LI"){
+        r.target.classList.toggle("checked");
+    }else if(r.target.tagName === "SPAN"){
+        r.target.parentElement.remove();
+    }
+},false);
+
+function save(){
+    localStorage.setItem("data",container.innerHTML);
+}
+
+function show(){
+    container.innerHTML=localStorage.getItem("data");
+}show();
